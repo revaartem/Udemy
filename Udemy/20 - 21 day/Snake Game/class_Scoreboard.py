@@ -1,4 +1,3 @@
-
 from turtle import Turtle
 
 ALIGNMENT = 'center'
@@ -9,9 +8,12 @@ class Scoreboard(Turtle):
     """
     An instance class Scoreboard show current score on the screen, increase score and show "GAME OVER"
     """
+
     def __init__(self):
         super().__init__()
         self.score = 0
+        with open("data.txt") as high_score:
+            self.high_score = int(high_score.read())
         self.hideturtle()
         self.color('black')
         self.goto(0, 240)
@@ -28,13 +30,12 @@ class Scoreboard(Turtle):
         Show to the player current score on the screen
         """
         self.clear()
-        self.write(f'Score: {self.score}', align=ALIGNMENT, font=FONT)
+        self.write(f'Score: {self.score} High score: {self.high_score}', align=ALIGNMENT, font=FONT)
 
-    def game_over(self):
-        """
-        Show to the player message "GAME OVER"
-        """
-        self.penup()
-        self.goto(0, 0)
-        self.color('red')
-        self.write('GAME OVER', align=ALIGNMENT, font=('arial', 45, 'normal'))
+    def reset(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+        with open("data.txt", "w") as high_score:
+            high_score.write(f'{self.high_score}')
+        self.score = 0
+        self.score_write()
